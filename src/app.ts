@@ -9,6 +9,7 @@ import productRouter from "./api/routes/product.route";
 import orderRouter from "./api/routes/order.route";
 import storeRouter from "./api/routes/store.route";
 import categoryRouter from "./api/routes/category.route";
+import commentRouter from "./api/routes/comment.route";
 
 const app = express();
 const port = 5001;
@@ -29,6 +30,7 @@ app.use("/api/v2/store" , storeRouter);
 app.use("/api/v2/product", productRouter);
 app.use("/api/v2/category" , categoryRouter);
 app.use("/api/v2/order", orderRouter);
+app.use("/api/v2/komentar" , commentRouter)
 
 app.use(errorMiddleware);
 

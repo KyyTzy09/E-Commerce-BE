@@ -52,7 +52,7 @@ export class CommentController {
 
         res.status(201).json({
         status_code: 201,
-        message: `Berhasil mendapatkan semua data order`,
+        message: `Berhasil menambahkan komentar`,
         data: created,
       });
     } catch (error) {
@@ -66,7 +66,7 @@ export class CommentController {
 
         res.status(201).json({
         status_code: 200,
-        message: `Berhasil mendapatkan semua data order`,
+        message: `Berhasil menghapus komentar dengan id ${commentId}`,
         data: deleted,
       });
     } catch (error) {

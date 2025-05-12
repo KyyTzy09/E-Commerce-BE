@@ -7,7 +7,7 @@ const commentRouter = express.Router()
 const commentController = new CommentController(new CommentService)
 
 
-commentRouter.get("/" , commentController.getCommentByUserId)
+commentRouter.get("/" ,authMiddleware, commentController.getCommentByUserId.bind(commentController))
 commentRouter.post("/" ,authMiddleware, commentController.createComment.bind(commentController))
 
 commentRouter.get("/user" , authMiddleware, commentController.getCommentByUserId.bind(commentController))
