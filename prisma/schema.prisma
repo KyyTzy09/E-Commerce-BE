@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/generate"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(uuid())
+  email      String     @unique
+  password   String?
+  role       Role       @default(USER)
+  created_At DateTime   @default(now())
+  update_At  DateTime   @updatedAt
+  // Profile
+  profile    Profile?
+  store      Store[]
+  order      Order[]
+  comment    Komentar[]
+}
+
+model Profile {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id]) // Relation
+  userId String @unique
+
+  name  String?
+  bio   String  @default("Tambahkan info tentang anda")
+  image String  @default("https://i.pinimg.com/736x/5e/39/6b/5e396bb1b17681759922dd10f8a9d702.jpg")
+
+  created_At DateTime @default(now())
+  update_At  DateTime @updatedAt
+}
+
+model Store {
+  id         String    @id @default(uuid())
+  store_name String    @unique
+  info       String?
+  created_At DateTime  @default(now())
+  update_At  DateTime  @updatedAt
+  // Relation
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String
+  product    Product[]
+
+  @@index([userId, store_name])
+}
+
+model Product {
+  id           String        @id @default(uuid())
+  product_name String
+  description  String?
+  image        String
+  price        Int
+  stok         Int
+  status       productStatus @default(Tersedia)
+  created_At   DateTime      @default(now())
+  update_At    DateTime      @updatedAt
+  Store        Store?        @relation(fields: [storeId], references: [id])
+  storeId      String?
+  category     Categories[]
+  order        Order[]
+  comment      Komentar[]
+}
+
+model Category {
+  id            String @id @default(uuid())
+  category_name String
+
+  Product Categories[]
+}
+
+model Categories {
+  category    Category @relation(references: [id], fields: [category_Id])
+  category_Id String
+
+  product    Product @relation(references: [id], fields: [product_id])
+  product_id String
+
+  @@id([category_Id, product_id])
+}
+
+model Komentar {
+  id         String  @id @default(uuid())
+  // user
+  user       User    @relation(references: [id], fields: [user_id])
+  user_id    String
+  // Product
+  product    Product @relation(references: [id], fields: [product_id])
+  product_id String
+
+  komentar   String
+
+  create_at  DateTime @default(now())
+}
+
+model Order {
+  order_id String @id
+
+  user       User    @relation(references: [id], fields: [user_id])
+  user_id    String
+  product    Product @relation(references: [id], fields: [product_id])
+  product_id String
+
+  order_at  DateTime @default(now())
+  finish_at DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum productStatus {
+  Habis
+  Tersedia
+}
