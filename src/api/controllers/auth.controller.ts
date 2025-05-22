@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
 
 
-const services = new AuthService();
 export class AuthController {
   constructor( private readonly authService : AuthService ){}
   public async Register(req: Request, res: Response, next: NextFunction) {
@@ -24,10 +23,12 @@ export class AuthController {
 
       res.cookie("token", login, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
+        secure: false,
         sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000,
       });
+
+      console.log(req.cookies["token"])
       res.status(200).json({status_code : 200, message: "Login Success"});
     } catch (error) {
       next(error);

@@ -20,3 +20,7 @@ export interface deleteFromCategoryType {
   id: string;
   product_Id: string;
 }
+
+export interface categoryWithProductIdType {
+  product_Id : string
+}

@@ -65,6 +65,7 @@ export class categoryController {
       next(error);
     }
   }
+  
   async deleteCategory( req: Request, res: Response, next: NextFunction ) {
     try {
       const { categoryId } = req.params;

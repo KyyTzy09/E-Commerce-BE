@@ -21,7 +21,7 @@ export class UserController {
     try {
       const { name, bio } = req.body;
       const users = (req as any).user;
-      const image = req.file ? req.file.path : users.profile.image;
+      const image = req.file ? req.file.path :users.profile.image;
 
       const updateProfile = await this.userService.updateUser({
         id: users.id,

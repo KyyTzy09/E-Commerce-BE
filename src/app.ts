@@ -14,7 +14,7 @@ import commentRouter from "./api/routes/comment.route";
 const app = express();
 const port = 5001;
 
-app.use(cors({ credentials: true }));
+app.use(cors({origin:"http://localhost:5173", credentials: true }));
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -26,11 +26,11 @@ app.get("/api/v2", (_req, res) => {
 app.use("/api/v2/auth", authRouter);
 app.use("/api/v2/me", userRouter);
 app.use("/api/v2/admin", adminRouter);
-app.use("/api/v2/store" , storeRouter);
+app.use("/api/v2/store", storeRouter);
 app.use("/api/v2/product", productRouter);
-app.use("/api/v2/category" , categoryRouter);
+app.use("/api/v2/category", categoryRouter);
 app.use("/api/v2/order", orderRouter);
-app.use("/api/v2/komentar" , commentRouter)
+app.use("/api/v2/komentar", commentRouter);
 
 app.use(errorMiddleware);
 

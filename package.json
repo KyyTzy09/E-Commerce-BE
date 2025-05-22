@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run ./src/app.ts",
+    "start": "bun ./src/app.ts",
     "dev": "nodemon --watch src --ext ts --exec bun ./src/app.ts"
   },
   "devDependencies": {

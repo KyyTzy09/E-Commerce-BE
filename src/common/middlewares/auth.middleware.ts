@@ -13,7 +13,7 @@ export async function authMiddleware(
     const service = new UserService();
     // Jika token tidak ada
     if (!token) {
-      throw new HttpException(401, "Unauthorized");
+      throw new HttpException(401, "Token tidak ada");
     }
     // Decode token
     const decoded = await Jwt.decode(token) as { id: string };

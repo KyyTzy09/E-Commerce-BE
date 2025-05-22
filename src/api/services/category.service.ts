@@ -1,5 +1,5 @@
 import { HttpException } from "../../common/error/exception";
-import { categoryByIdType, categoryByNameType , deleteFromCategoryType, productToCategoryType, updateCategoryType } from "../../common/types/category";
+import { categoryByIdType, categoryByNameType , categoryWithProductIdType, deleteFromCategoryType, productToCategoryType, updateCategoryType } from "../../common/types/category";
 
 export class categoryService {
   async getAllCategory() {
@@ -24,6 +24,7 @@ export class categoryService {
     }
     return getCategoryById;
   }
+
   async createCategory(data: categoryByNameType) {
     const existingCategory = await prisma.category.findFirst({
       where: {
@@ -42,6 +43,7 @@ export class categoryService {
 
     return create;
   }
+
   async updateCategory(data: updateCategoryType) {
     const checkCategory = await prisma.category.findUnique({
       where: {
@@ -64,6 +66,7 @@ export class categoryService {
 
     return update;
   }
+
   async deleteCategory(data : categoryByIdType) {
     const checkCategory = await prisma.category.findUnique({
       where: {
@@ -82,6 +85,29 @@ export class categoryService {
     })
     return deleteCategory;
   }
+
+  async getCategoryByProductId (data : categoryWithProductIdType) {
+    const product = await prisma.product.findUnique({
+      where : {
+        id : data.product_Id
+      }, include : {
+        category : true
+      }
+    })
+
+    const category_Id = product?.category.map((item) => item.category_Id);
+
+    const category = await prisma.category.findMany({
+      where : {
+        id : {
+          in : category_Id
+        }
+      }
+    })
+
+    return category;
+  }
+
   async getProductByCategory(data: categoryByNameType) {
     const getProductByCategory = await prisma.product.findMany({
       where: {
@@ -101,6 +127,7 @@ export class categoryService {
 
     return getProductByCategory;
   }
+
   async addProductToCategory(data: productToCategoryType) {
     if (!data.name || !data.product_Id) {
       throw new HttpException(400, "All fields are required");

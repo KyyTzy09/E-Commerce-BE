@@ -1,4 +1,3 @@
-import { idText } from "typescript";
 import { HttpException } from "../../common/error/exception";
 import {
   createProductType,
@@ -11,12 +10,19 @@ import {
   updateProductType,
   updateStok,
 } from "../../common/types/product";
+import { categoryService } from "./category.service";
+
 
 export class ProductService {
   public async getAllProduct(data: getAllProductType) {
     const allProducts = await prisma.product.findMany({
       take: data.limit,
       skip: (data.page - 1) * data.limit,
+      include : {
+        category : true,
+        order : true,
+        Store : true
+      }
     });
 
     if (allProducts.length === 0) {
@@ -48,18 +54,22 @@ export class ProductService {
     return products;
   }
   public async getProductById(data: productByIdType) {
-    if (!data.productId)
+    if (!data.productId){
       throw new HttpException(400, "All fields are required");
+    }
+    const catService = new categoryService()
     const product = await prisma.product.findUnique({
       where: { id: data.productId },
-      include: { Store: true, category: true },
+      include: { Store: true },
     });
 
     if (!product) {
       throw new HttpException(404 , "Produk Tidak Ditemukan")
     }
 
-    return product;
+    const category = await catService.getCategoryByProductId({product_Id : data.productId})
+
+    return {product, category};
   }
   public async getAllProductByStoreIdAndProductId(
     data: productByIdAndStoreIdType
@@ -151,7 +161,7 @@ export class ProductService {
         id: data.productId,
       },
       data: {
-        status: updateStok.stok === 0 ? "Habis" : "Tersedia",
+        status: updateStok.stok <= 0 ? "Habis" : "Tersedia",
       },
     });
     return {updateStatus , updateStok}

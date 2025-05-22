@@ -83,6 +83,7 @@ export class ProductController {
     try {
       const { productId } = req.params;
       const product = await this.productService.getProductById({ productId });
+      const category = await
       res.status(200).json({
         status_code: 200,
         message: `Product dengan id ${productId} ditemukan`,
@@ -120,7 +121,7 @@ export class ProductController {
       const { storeId , price, stok } = req.body;
 
       const product = await this.productService.getProductById({ productId });
-      const image = req.file ? req.file.path : product?.image;
+      const image = req.file ? req.file.path : product?.product.image;
       const updateProduct = await this.productService.updateProduct({
         storeId,
         productId,

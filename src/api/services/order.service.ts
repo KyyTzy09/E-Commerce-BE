@@ -101,13 +101,13 @@ export class OrderService {
     const parameter = {
       transaction_details: {
         order_id,
-        gross_amount: product?.price,
+        gross_amount: product?.product.price,
       },
       item_details: [
         {
-          id: product?.id,
-          price: product?.price,
-          name: product?.product_name,
+          id: product?.product.id,
+          price: product?.product.price,
+          name: product?.product.product_name,
           quantity: 1,
         },
       ],
@@ -115,6 +115,9 @@ export class OrderService {
         first_name: user.profile?.name,
         email: user.email,
       },
+      callbacks : {
+        finish: "http://localhost:5173"
+      }
     };
 
     const transaction = await Snap.createTransaction(parameter);
