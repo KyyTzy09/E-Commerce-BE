@@ -6,6 +6,7 @@ export interface getAllProductType {
 export interface productByIdType {
   productId: string;
 }
+
 export interface productByNameType {
   name: string;
   page: number;
@@ -18,6 +19,7 @@ export interface productByIdAndStoreIdType {
   page: number;
   limit: number;
 }
+
 export interface productByStoreIdType {
   storeId: string;
   page: number;
@@ -26,7 +28,6 @@ export interface productByStoreIdType {
 
 export interface deleteProductByIdType {
   productId: string;
-  storeId: string;
 }
 
 export interface createProductType {

@@ -12,6 +12,7 @@ orderRouter.get("/", (_req , res ) => {
 })
 
 orderRouter.get("/" ,authMiddleware , controller.getOrdersByUserId.bind(controller))
+orderRouter.delete("/", authMiddleware ,)
 orderRouter.post("/pay" , authMiddleware , controller.createTransaction.bind(controller))
 
 export default orderRouter;

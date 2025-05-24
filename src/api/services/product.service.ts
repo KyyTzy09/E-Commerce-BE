@@ -12,17 +12,16 @@ import {
 } from "../../common/types/product";
 import { categoryService } from "./category.service";
 
-
 export class ProductService {
   public async getAllProduct(data: getAllProductType) {
     const allProducts = await prisma.product.findMany({
       take: data.limit,
       skip: (data.page - 1) * data.limit,
-      include : {
-        category : true,
-        order : true,
-        Store : true
-      }
+      include: {
+        category: true,
+        order: true,
+        Store: true,
+      },
     });
 
     if (allProducts.length === 0) {
@@ -53,23 +52,29 @@ export class ProductService {
     });
     return products;
   }
+
   public async getProductById(data: productByIdType) {
-    if (!data.productId){
+    if (!data.productId) {
       throw new HttpException(400, "All fields are required");
     }
-    const catService = new categoryService()
+    const catService = new categoryService();
     const product = await prisma.product.findUnique({
       where: { id: data.productId },
-      include: { Store: true },
+      include: {
+        Store: true,
+        comment: true,
+      },
     });
 
     if (!product) {
-      throw new HttpException(404 , "Produk Tidak Ditemukan")
+      throw new HttpException(404, "Produk Tidak Ditemukan");
     }
 
-    const category = await catService.getCategoryByProductId({product_Id : data.productId})
+    const category = await catService.getCategoryByProductId({
+      product_Id: data.productId,
+    });
 
-    return {product, category};
+    return { product, category };
   }
   public async getAllProductByStoreIdAndProductId(
     data: productByIdAndStoreIdType
@@ -125,14 +130,74 @@ export class ProductService {
     });
     return updateProduct;
   }
-  public async deleteProductById(data: deleteProductByIdType) {
-    const updateProduct = await prisma.product.delete({
+
+  public async deleteProductByStoreId(data: { storeId: string }) {
+    const existingProduct = await prisma.product.findMany({
       where: {
-        id: data.productId,
         storeId: data.storeId,
       },
     });
-    return updateProduct;
+
+    if (existingProduct.length === 0) {
+      throw new HttpException(404, "Product Tidak Ditemukan");
+    }
+
+    const deleteCategory = await prisma.categories.deleteMany({
+      where: {
+        product_id: {
+          in: existingProduct.map((item) => item.id),
+        },
+      },
+    });
+
+    const deletekomentar = await prisma.komentar.deleteMany({
+      where: {
+        product_id: {
+          in: existingProduct.map((item) => item.id),
+        },
+      },
+    });
+
+    const deleteOrder = await prisma.order.deleteMany({
+      where: {
+        product_id: {
+          in: existingProduct.map((item) => item.id),
+        },
+      },
+    });
+
+    const deleteProduct = await prisma.product.deleteMany({
+      where: {
+        storeId: data.storeId,
+      },
+    });
+    return { deleteCategory, deletekomentar, deleteOrder, deleteProduct };
+  }
+  public async deleteProductById(data: deleteProductByIdType) {
+    const deleteOrder = await prisma.order.deleteMany({
+      where: {
+        product_id: data.productId,
+      },
+    });
+    const deleteCategory = await prisma.categories.deleteMany({
+      where: {
+        product_id: data.productId,
+      },
+    });
+
+    const deletekomentar = await prisma.komentar.deleteMany({
+      where: {
+        product_id: data.productId,
+      },
+    });
+
+    const deleteProduct = await prisma.product.delete({
+      where: {
+        id: data.productId,
+      },
+    });
+
+    return { deleteOrder, deleteCategory, deletekomentar, deleteProduct };
   }
   public async updateStokProduct(data: updateStok) {
     const existingProduct = await prisma.product.findFirst({
@@ -164,6 +229,6 @@ export class ProductService {
         status: updateStok.stok <= 0 ? "Habis" : "Tersedia",
       },
     });
-    return {updateStatus , updateStok}
+    return { updateStatus, updateStok };
   }
 }

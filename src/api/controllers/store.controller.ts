@@ -72,6 +72,7 @@ export class StoreController {
         name,
         info,
       });
+
       res.status(200).json({
         status_code: 201,
         message: "Berhasil membuat store",
@@ -127,7 +128,7 @@ export class StoreController {
       res.status(200).json({
         status_code: 200,
         message: "Berhasil menghapus store berdasarkan id",
-        data: deletedStore,
+        data: deletedStore.deletedStore,
       });
     } catch (error) {
       next(error);

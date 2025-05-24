@@ -144,10 +144,9 @@ export class ProductController {
   
   public async deleteProduct(req: Request, res: Response, next: NextFunction) {
     try {
-      const { storeId, productId } = req.params;
+      const { productId } = req.params;
 
-      const createdProduct = await this.productService.deleteProductById({
-        storeId,
+      const deletedProduct = await this.productService.deleteProductById({
         productId,
       });
       res
@@ -155,7 +154,7 @@ export class ProductController {
         .json({
           status_code: 200,
           message: "Berhasil menghapus product",
-          data: createdProduct,
+          data: deletedProduct.deleteProduct,
         });
     } catch (error) {
       next(error);

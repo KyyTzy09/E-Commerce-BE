@@ -6,6 +6,7 @@ import {
   createTransasctionTypes,
   orderByIdTypes,
   orderByUserIdTypes,
+  updateOrderTypes,
 } from "../../common/types/order";
 import { ProductService } from "./product.service";
 import { UserService } from "./user.service";
@@ -23,6 +24,7 @@ export class OrderService {
 
     return getAllOrder;
   }
+
   public async getAllOrdersByUserId(data: orderByUserIdTypes) {
     const order = await prisma.order.findMany({
       where: {
@@ -49,6 +51,7 @@ export class OrderService {
 
     return order;
   }
+
   public async createOrder(data: createOrderTypes) {
     const create = await prisma.order.create({
       data: {
@@ -57,37 +60,68 @@ export class OrderService {
         order_id: data.orderId,
       },
     });
-
     return create;
   }
 
-  // public async updateOrder(data: updateOrderTypes) {
-  //   let status_db
+  public async updateOrder(data: updateOrderTypes) {
 
-  //   const existingOrder = await prisma.order.findFirst({
-  //     where: {
-  //       user_id: data.userId,
-  //       order_id: data.orderId,
-  //     },
-  //   });
+    const existingOrder = await prisma.order.findFirst({
+      where: {
+        user_id: data.userId,
+        order_id: data.orderId,
+      },
+    });
 
-  //   if (!existingOrder) {
-  //     throw new HttpException(404, "Data Pesanan Tidak Ditemukan");
-  //   }
+    if (!existingOrder) {
+      throw new HttpException(404, "Data Pesanan Tidak Ditemukan");
+    }
 
-  //   const updateOrder = await prisma.order.update({
-  //     where: {
-  //       user_id: data.userId,
-  //       order_id: data.orderId,
-  //     },
-  //     data: {
-  //     },
-  //   });
+    const updateOrder = await prisma.order.update({
+      where: {
+        user_id: data.userId,
+        order_id: data.orderId,
+      },
+      data: {
+      },
+    });
 
-  //   return;
-  // }
+    return;
+  }
 
-  public async deleteOrder() {}
+  public async deleteOrderByProductId(data: { productId: string }) {
+    const existingOrder = await prisma.order.findMany({
+      where: {
+        product_id: data.productId,
+      },
+    });
+
+    if (existingOrder.length === 0) {
+      throw new HttpException(404, "Order Tidak Ditemukan");
+    }
+
+    const deleteOrder = await prisma.order.deleteMany({
+      where: {
+        product_id: data.productId,
+      },
+    });
+
+    return deleteOrder;
+  }
+  public async deleteOrderById (data : orderByIdTypes) {
+    const existingOrder = await this.getOrderById({orderId : data.orderId})
+
+    if (!existingOrder) {
+      throw new HttpException(404 , "Product Tidak Ditemukan")
+    }
+
+    const deleteOrder = await prisma.order.delete({
+      where : {
+        order_id : existingOrder.order_id
+      }
+    })
+
+    return deleteOrder;
+  }
 
   public async createTransaction(data: createTransasctionTypes) {
     const product = await productService.getProductById({
@@ -115,9 +149,9 @@ export class OrderService {
         first_name: user.profile?.name,
         email: user.email,
       },
-      callbacks : {
-        finish: "http://localhost:5173"
-      }
+      callbacks: {
+        finish: "http://localhost:5173",
+      },
     };
 
     const transaction = await Snap.createTransaction(parameter);

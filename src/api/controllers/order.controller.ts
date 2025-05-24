@@ -50,9 +50,17 @@ export class OrderController {
     }
   }
 
-  public async webHookHandling( req: Request, res: Response, next: NextFunction ) {
+  public async deleteOrderById( req: Request, res: Response, next: NextFunction ) {
     try {
-        const {} = req.body;
+        const {orderId} = req.body;
+
+        const deleted = await this.service.deleteOrderById({orderId})
+
+        res.status(200).json({
+        status_code: 200,
+        message: `Transaksi sukses dibuat`,
+        data: deleted
+      })
     } catch (error) {
       next(error);
     }
