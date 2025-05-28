@@ -71,9 +71,8 @@ export class StoreService {
       throw new HttpException(400, "All fields are required");
     }
 
-    const store = await prisma.store.findFirst({
+    const store = await prisma.store.findUnique({
       where: {
-        userId: data.userId,
         store_name: data.name,
       },
     });
@@ -100,8 +99,7 @@ export class StoreService {
 
     const store = await prisma.store.findUnique({
       where: {
-        userId: data.userId,
-        store_name: data.name,
+        id : data.id
       },
     });
 
@@ -174,7 +172,7 @@ export class StoreService {
       throw new HttpException(404, "No stores found");
     }
 
-    const deleteProduct = await productService.deleteProductByStoreId({storeId : existingStores.id})
+    const deleteProduct = await productService.deleteProductByStoreId({storeId : data.id})
 
     const deletedStore = await prisma.store.deleteMany({
       where: {

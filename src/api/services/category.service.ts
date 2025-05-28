@@ -1,5 +1,12 @@
 import { HttpException } from "../../common/error/exception";
-import { categoryByIdType, categoryByNameType , categoryWithProductIdType, deleteFromCategoryType, productToCategoryType, updateCategoryType } from "../../common/types/category";
+import {
+  categoryByIdType,
+  categoryByNameType,
+  categoryWithProductIdType,
+  deleteFromCategoryType,
+  productToCategoryType,
+  updateCategoryType,
+} from "../../common/types/category";
 
 export class categoryService {
   async getAllCategory() {
@@ -67,10 +74,10 @@ export class categoryService {
     return update;
   }
 
-  async deleteCategory(data : categoryByIdType) {
+  async deleteCategory(data: categoryByIdType) {
     const checkCategory = await prisma.category.findUnique({
       where: {
-        id : data.id,
+        id: data.id,
       },
     });
 
@@ -82,28 +89,29 @@ export class categoryService {
       where: {
         id: data.id,
       },
-    })
+    });
     return deleteCategory;
   }
 
-  async getCategoryByProductId (data : categoryWithProductIdType) {
+  async getCategoryByProductId(data: categoryWithProductIdType) {
     const product = await prisma.product.findUnique({
-      where : {
-        id : data.product_Id
-      }, include : {
-        category : true
-      }
-    })
+      where: {
+        id: data.product_Id,
+      },
+      include: {
+        category: true,
+      },
+    });
 
     const category_Id = product?.category.map((item) => item.category_Id);
 
     const category = await prisma.category.findMany({
-      where : {
-        id : {
-          in : category_Id
-        }
-      }
-    })
+      where: {
+        id: {
+          in: category_Id,
+        },
+      },
+    });
 
     return category;
   }
@@ -136,12 +144,12 @@ export class categoryService {
       where: {
         id: data.product_Id,
       },
-    })
+    });
 
     if (!checkProduct) {
       throw new HttpException(404, "Product tidak ditemukan");
     }
-    
+
     const checkCategory = await prisma.category.findMany({
       where: {
         category_name: {
@@ -153,12 +161,18 @@ export class categoryService {
     if (checkCategory.length === 0) {
       throw new HttpException(404, "Category tidak ditemukan");
     }
-    const existingCategory = await prisma.categories.findMany({
+
+    const existingCategories = await prisma.categories.findMany({
       where: {
         product_id: data.product_Id,
       },
     });
 
+    if (existingCategories.length > 0) {
+    await prisma.categories.deleteMany({
+        where: { product_id: data.product_Id },
+      });
+    }
     const addToCategory = await prisma.categories.createMany({
       data: checkCategory.map((cat) => ({
         category_Id: cat.id,
@@ -171,23 +185,22 @@ export class categoryService {
   }
 
   async removeProductFromCategory(data: deleteFromCategoryType) {
-    const checkCategory = await prisma.categories.findFirst({
+    if (!data.product_Id) {
+      throw new HttpException(400, "All fields are required");
+    }
+    const checkProduct = await prisma.product.findUnique({
       where: {
-        category_Id: data.id,
-        product_id: data.product_Id,
+        id: data.product_Id,
       },
     });
 
-    if (!checkCategory) {
-      throw new HttpException(404, "Category tidak ditemukan");
+    if (!checkProduct) {
+      throw new HttpException(404, "Product tidak ditemukan");
     }
 
-    const removeFromCategory = await prisma.categories.delete({
+    const removeFromCategory = await prisma.categories.deleteMany({
       where: {
-        category_Id_product_id: {
-          category_Id: checkCategory.category_Id,
-          product_id: checkCategory.product_id,
-        },
+        product_id: data.product_Id,
       },
     });
 

@@ -102,7 +102,7 @@ export class categoryController {
   async addProductToCategory( req: Request, res: Response, next: NextFunction ) {
     try {
       const { productId, name } = req.body;
-
+      console.log(name)
       const addProduct = await this.categoryServices.addProductToCategory({
         name,
         product_Id: productId,
@@ -121,11 +121,9 @@ export class categoryController {
   async removeProductFromCategory( req: Request, res: Response, next: NextFunction ) {
     try {
       const { productId } = req.body;
-      const { categoryId } = req.params;
 
       const removeProduct =
         await this.categoryServices.removeProductFromCategory({
-          id: categoryId,
           product_Id: productId,
         });
 

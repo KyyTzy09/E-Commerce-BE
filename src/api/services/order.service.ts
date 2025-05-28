@@ -58,13 +58,13 @@ export class OrderService {
         user_id: data.userId,
         product_id: data.productId,
         order_id: data.orderId,
+        price : data.price
       },
     });
     return create;
   }
 
   public async updateOrder(data: updateOrderTypes) {
-
     const existingOrder = await prisma.order.findFirst({
       where: {
         user_id: data.userId,
@@ -81,8 +81,7 @@ export class OrderService {
         user_id: data.userId,
         order_id: data.orderId,
       },
-      data: {
-      },
+      data: {},
     });
 
     return;
@@ -107,18 +106,19 @@ export class OrderService {
 
     return deleteOrder;
   }
-  public async deleteOrderById (data : orderByIdTypes) {
-    const existingOrder = await this.getOrderById({orderId : data.orderId})
+  
+  public async deleteOrderById(data: orderByIdTypes) {
+    const existingOrder = await this.getOrderById({ orderId: data.orderId });
 
     if (!existingOrder) {
-      throw new HttpException(404 , "Product Tidak Ditemukan")
+      throw new HttpException(404, "Product Tidak Ditemukan");
     }
 
     const deleteOrder = await prisma.order.delete({
-      where : {
-        order_id : existingOrder.order_id
-      }
-    })
+      where: {
+        order_id: existingOrder.order_id,
+      },
+    });
 
     return deleteOrder;
   }
@@ -135,14 +135,14 @@ export class OrderService {
     const parameter = {
       transaction_details: {
         order_id,
-        gross_amount: product?.product.price,
+        gross_amount: product?.product.price * data.quantity,
       },
       item_details: [
         {
           id: product?.product.id,
           price: product?.product.price,
           name: product?.product.product_name,
-          quantity: 1,
+          quantity: data.quantity,
         },
       ],
       customer_details: {
@@ -160,15 +160,64 @@ export class OrderService {
       userId: data.userId,
       productId: data.productId,
       orderId: order_id,
+      price : parameter.transaction_details.gross_amount
+    });
+
+    return {
+      order: createOrder,
+      transaction: transaction.token,
+    };
+  }
+  public async successTransaction(data: {
+    productId: string;
+    userId: string;
+    orderId: string;
+    quantity : number;
+  }) {
+    const product = await productService.getProductById({
+      productId: data.productId,
+    });
+
+    const updateOrder = await prisma.order.update({
+      where: {
+        order_id: data.orderId,
+        user_id: data.userId,
+        product_id: product.product.id,
+      },
+      data: {
+        status: "Success",
+      },
     });
 
     const updateProduct = await productService.updateStokProduct({
       productId: data.productId,
+      quantity : data.quantity
     });
     return {
-      order: createOrder,
-      transaction: transaction.token,
+      order: updateOrder,
       updated: updateProduct,
     };
+  }
+    public async cancelTransaction(data: {
+    productId: string;
+    userId: string;
+    orderId: string;
+  }) {
+    const product = await productService.getProductById({
+      productId: data.productId,
+    });
+
+    const updateOrder = await prisma.order.update({
+      where: {
+        order_id: data.orderId,
+        user_id: data.userId,
+        product_id: product.product.id,
+      },
+      data: {
+        status: "Canceled",
+      },
+    });
+
+    return updateOrder;
   }
 }

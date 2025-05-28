@@ -37,11 +37,11 @@ export class OrderController {
 
   public async createTransaction( req: Request, res: Response, next: NextFunction ) {
     try {
-      const { productId } = req.body;
+      const { productId, quantity } = req.body;
       const user = await (req as any).user;
-      const createOrder = await this.service.createTransaction({ productId, userId: user.id });
+      const createOrder = await this.service.createTransaction({ productId, userId: user.id, quantity });
       res.status(200).json({
-        status_code: 200,
+        status_code: 201,
         message: `Transaksi sukses dibuat`,
         data: createOrder,
       })
@@ -49,7 +49,34 @@ export class OrderController {
       next(error);
     }
   }
-
+  public async succesTransaction( req: Request, res: Response, next: NextFunction ) {
+    try {
+      const { productId, orderId, quantity } = req.body;
+      const user = await (req as any).user;
+      const createOrder = await this.service.successTransaction({ productId, userId: user.id, orderId , quantity : Number(quantity)});
+      res.status(200).json({
+        status_code: 200,
+        message: `Transaksi berhasil`,
+        data: createOrder,
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
+    public async cancelTransaction( req: Request, res: Response, next: NextFunction ) {
+    try {
+      const { productId, orderId } = req.body;
+      const user = await (req as any).user;
+      const createOrder = await this.service.cancelTransaction({ productId, userId: user.id, orderId });
+      res.status(200).json({
+        status_code: 200,
+        message: `Transaksi Dibatalkan`,
+        data: createOrder,
+      })
+    } catch (error) {
+      next(error);
+    }
+  }
   public async deleteOrderById( req: Request, res: Response, next: NextFunction ) {
     try {
         const {orderId} = req.body;
@@ -58,7 +85,7 @@ export class OrderController {
 
         res.status(200).json({
         status_code: 200,
-        message: `Transaksi sukses dibuat`,
+        message: `Transaksi sukses dihapus`,
         data: deleted
       })
     } catch (error) {

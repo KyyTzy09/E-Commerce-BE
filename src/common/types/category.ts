@@ -17,7 +17,6 @@ export interface productToCategoryType {
 }
 
 export interface deleteFromCategoryType {
-  id: string;
   product_Id: string;
 }
 

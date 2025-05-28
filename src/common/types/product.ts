@@ -50,5 +50,6 @@ export interface updateProductType {
 }
 
 export interface updateStok {
-  productId : string
+  productId : string;
+  quantity : number;
 }

@@ -3,12 +3,14 @@ export interface createTransasctionTypes {
     productId : string;
     // user info
     userId : string;
+    quantity : number
 }
 
 export interface createOrderTypes {
     productId : string;
     orderId : string;
     userId : string;
+    price : number;
 }
 
 export interface updateOrderTypes {

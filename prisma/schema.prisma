@@ -92,18 +92,20 @@ model Komentar {
   product    Product @relation(references: [id], fields: [product_id])
   product_id String
 
-  komentar   String
+  komentar String
 
-  create_at  DateTime @default(now())
+  create_at DateTime @default(now())
 }
 
 model Order {
   order_id String @id
 
-  user       User    @relation(references: [id], fields: [user_id])
+  user       User        @relation(references: [id], fields: [user_id])
   user_id    String
-  product    Product @relation(references: [id], fields: [product_id])
+  product    Product     @relation(references: [id], fields: [product_id])
   product_id String
+  status     orderStatus @default(Pending)
+  price      Int
 
   order_at  DateTime @default(now())
   finish_at DateTime @updatedAt
@@ -117,4 +119,10 @@ enum Role {
 enum productStatus {
   Habis
   Tersedia
+}
+
+enum orderStatus {
+  Success
+  Pending
+  Canceled
 }

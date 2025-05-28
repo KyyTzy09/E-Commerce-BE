@@ -63,6 +63,7 @@ export class ProductService {
       include: {
         Store: true,
         comment: true,
+        order : true
       },
     });
 
@@ -83,7 +84,7 @@ export class ProductService {
       where: { storeId: data.storeId, id: data.productId },
       skip: (data.page - 1) * data.limit,
       take: data.limit,
-      include: { Store: true, category: true },
+      include: { Store: true, category: true, order : true },
     });
 
     return products;
@@ -137,11 +138,6 @@ export class ProductService {
         storeId: data.storeId,
       },
     });
-
-    if (existingProduct.length === 0) {
-      throw new HttpException(404, "Product Tidak Ditemukan");
-    }
-
     const deleteCategory = await prisma.categories.deleteMany({
       where: {
         product_id: {
@@ -216,7 +212,7 @@ export class ProductService {
       },
       data: {
         stok: {
-          decrement: 1,
+          decrement: data.quantity,
         },
       },
     });
