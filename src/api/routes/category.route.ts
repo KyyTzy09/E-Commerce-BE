@@ -8,7 +8,7 @@ const controller = new categoryController(new categoryService);
 categoryRouter.get("/" , controller.getAllCategory.bind(controller)); 
 categoryRouter.post("/" , controller.createCategory.bind(controller));
 
-categoryRouter.get("/all" , controller.getProductByCategory.bind(controller));
+categoryRouter.get("/product" , controller.getProductByCategory.bind(controller));
 categoryRouter.post("/add" , controller.addProductToCategory.bind(controller));
 categoryRouter.delete("/remove" , controller.removeProductFromCategory.bind(controller));
 

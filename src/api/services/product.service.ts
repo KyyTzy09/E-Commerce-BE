@@ -52,7 +52,21 @@ export class ProductService {
     });
     return products;
   }
+  public async getTopProduct() {
+    const getTopProduct = await prisma.product.findMany({
+      orderBy :{ 
+        order : {
+          _count: "desc"
+        }
+      }, take : 6,
+      include : {
+        order : true,
+        Store : true
+      }
+    })
 
+    return getTopProduct
+  }
   public async getProductById(data: productByIdType) {
     if (!data.productId) {
       throw new HttpException(400, "All fields are required");
@@ -196,7 +210,7 @@ export class ProductService {
     return { deleteOrder, deleteCategory, deletekomentar, deleteProduct };
   }
   public async updateStokProduct(data: updateStok) {
-    const existingProduct = await prisma.product.findFirst({
+    const existingProduct = await prisma.product.findUnique({
       where: {
         id: data.productId,
       },

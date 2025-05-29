@@ -19,6 +19,7 @@ export class UserService {
       },
       include: {
         profile: true,
+        order : true,
       },
     });
 

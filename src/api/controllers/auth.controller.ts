@@ -28,7 +28,6 @@ export class AuthController {
         maxAge: 24 * 60 * 60 * 1000,
       });
 
-      console.log(req.cookies["token"])
       res.status(200).json({status_code : 200, message: "Login Success"});
     } catch (error) {
       next(error);

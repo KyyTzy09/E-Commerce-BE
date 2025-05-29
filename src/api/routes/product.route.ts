@@ -13,6 +13,7 @@ productRouter.get("/" , productController.getAllProducts.bind(productController)
 productRouter.get("/", productController.getAllProductsByStoreId.bind(productController));  
 productRouter.post("/", authMiddleware, upload.single("image"),ValidateMiddleware(productSchema), productController.createProduct.bind(productController));
 
+productRouter.get("/top" , productController.getTopProducts.bind(productController));
 productRouter.get("/search",productController.getAllProductsByName.bind(productController));
 
 productRouter.get("/:productId", productController.getProductById.bind(productController));

@@ -38,6 +38,18 @@ export class ProductController {
       next(error);
     }
   }
+    public async getTopProducts( req: Request, res: Response, next: NextFunction ) {
+    try {
+      const getTopProducts = await this.productService.getTopProduct()
+      res.status(200).json({
+        status_code: 200,
+        message: `Product ditemukan`,
+        data : getTopProducts        
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   public async getAllProductsByStoreId( req: Request, res: Response, next: NextFunction ) {
     try {

@@ -6,6 +6,7 @@ import {
   createTransasctionTypes,
   orderByIdTypes,
   orderByUserIdTypes,
+  successTransaction,
   updateOrderTypes,
 } from "../../common/types/order";
 import { ProductService } from "./product.service";
@@ -30,6 +31,10 @@ export class OrderService {
       where: {
         user_id: data.userId,
       },
+      include: {
+        product: true,
+        user: true,
+      },
     });
 
     if (order.length === 0) {
@@ -42,7 +47,10 @@ export class OrderService {
     const order = await prisma.order.findUnique({
       where: {
         order_id: data.orderId,
-      },
+      },include : {
+        product :true,
+        user : true
+      }
     });
 
     if (!order) {
@@ -53,12 +61,13 @@ export class OrderService {
   }
 
   public async createOrder(data: createOrderTypes) {
+    const order_id = `${Date.now()}-${randomUUID()}`;
     const create = await prisma.order.create({
       data: {
         user_id: data.userId,
         product_id: data.productId,
-        order_id: data.orderId,
-        price : data.price
+        order_id: order_id,
+        price: data.price * data.quantity,
       },
     });
     return create;
@@ -106,7 +115,7 @@ export class OrderService {
 
     return deleteOrder;
   }
-  
+
   public async deleteOrderById(data: orderByIdTypes) {
     const existingOrder = await this.getOrderById({ orderId: data.orderId });
 
@@ -124,25 +133,24 @@ export class OrderService {
   }
 
   public async createTransaction(data: createTransasctionTypes) {
-    const product = await productService.getProductById({
-      productId: data.productId,
-    });
-
-    const order_id = `${Date.now()}-${randomUUID()}`;
-
+    const existingOrder = await this.getOrderById({orderId : data.orderId})
+    
+    if (!existingOrder) {
+      throw new HttpException(404 , "Order tidak ditemukan");
+    }
     const user = await userService.getProfileById({ id: data.userId });
 
     const parameter = {
       transaction_details: {
-        order_id,
-        gross_amount: product?.product.price * data.quantity,
+        order_id : existingOrder.order_id,
+        gross_amount: existingOrder?.price,
       },
       item_details: [
         {
-          id: product?.product.id,
-          price: product?.product.price,
-          name: product?.product.product_name,
-          quantity: data.quantity,
+          id: existingOrder?.product.id,
+          price: existingOrder?.product.price,
+          name: existingOrder?.product.product_name,
+          quantity: existingOrder.price / existingOrder.product.price,
         },
       ],
       customer_details: {
@@ -155,25 +163,11 @@ export class OrderService {
     };
 
     const transaction = await Snap.createTransaction(parameter);
-
-    const createOrder = await this.createOrder({
-      userId: data.userId,
-      productId: data.productId,
-      orderId: order_id,
-      price : parameter.transaction_details.gross_amount
-    });
-
-    return {
-      order: createOrder,
-      transaction: transaction.token,
-    };
+    return transaction.token
   }
-  public async successTransaction(data: {
-    productId: string;
-    userId: string;
-    orderId: string;
-    quantity : number;
-  }) {
+  public async successTransaction(data: successTransaction) {
+    const order = await this.getOrderById({orderId : data.orderId})
+
     const product = await productService.getProductById({
       productId: data.productId,
     });
@@ -191,14 +185,15 @@ export class OrderService {
 
     const updateProduct = await productService.updateStokProduct({
       productId: data.productId,
-      quantity : data.quantity
+      quantity: order.price / product.product.price,
     });
+
     return {
       order: updateOrder,
       updated: updateProduct,
     };
   }
-    public async cancelTransaction(data: {
+  public async cancelTransaction(data: {
     productId: string;
     userId: string;
     orderId: string;

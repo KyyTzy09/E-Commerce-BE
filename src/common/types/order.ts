@@ -3,13 +3,19 @@ export interface createTransasctionTypes {
     productId : string;
     // user info
     userId : string;
-    quantity : number
+
+    orderId : string
+}
+export interface successTransaction {
+    productId: string;
+    userId: string;
+    orderId: string;
 }
 
 export interface createOrderTypes {
     productId : string;
-    orderId : string;
     userId : string;
+    quantity : number;
     price : number;
 }
 
