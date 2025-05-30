@@ -5,17 +5,17 @@ export class ProductController {
   constructor(private readonly productService : ProductService){}
   public async getAllProductsByName( req: Request, res: Response, next: NextFunction ) {
     try {
-      const { search, page, limit } = req.query;
+      const { name, page, limit } = req.query;
 
       const allProduct = await this.productService.getAllProductByName({
-        name: String(search),
-        page: Number(page),
-        limit: Number(limit),
+        name: String(name),
+        page: Number(page) || 1,
+        limit: Number(limit) || 10,
       });
       res.status(200).json({
         status_code: 200,
-        message: `Product dengan nama ${String(search)} ditemukan`,
-        data: allProduct,
+        message: `Product dengan nama ${String(name)}ditemukan`,
+        data : allProduct
       });
     } catch (error) {
       next(error);
@@ -27,7 +27,7 @@ export class ProductController {
       const { page , limit } = req.query;
       const allProduct = await this.productService.getAllProduct({
         page: Number(page) || 1,
-        limit: Number(limit) || 25,
+        limit: Number(limit) || 10,
       });
       res.status(200).json({
         status_code: 200,

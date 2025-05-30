@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { categoryService } from "../services/category.service";
+import { number } from "joi";
 
 export class categoryController {
   constructor(private readonly categoryServices: categoryService) {}
@@ -83,11 +84,13 @@ export class categoryController {
   }
   async getProductByCategory( req: Request, res: Response, next: NextFunction ) {
     try {
-      const { name } = req.query;
+      const { name, page, limit } = req.query;
 
       const productByCategory =
         await this.categoryServices.getProductByCategory({
           name: String(name),
+          page : Number(page) || 1,
+          limit : Number(limit) || 10
         });
 
       res.status(200).json({

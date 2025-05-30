@@ -32,7 +32,14 @@ export class CommentService {
     const komentar = await prisma.komentar.findMany({
       where: {
         product_id: data.productId,
-      },
+      },include : {
+        user : {
+          include : {
+            profile : true
+          }
+        },
+        product : true
+      }
     });
     if (komentar.length === 0) {
       throw new HttpException(404, "Komentar tidak ditemukan");
@@ -68,6 +75,12 @@ export class CommentService {
     return deleteAl;
   }
   public async deleteCommentById(data: deleteByIdTypes) {
+    const existingComment = await this.getCommentById({id : data.id})
+    
+    if (!existingComment) {
+      throw new HttpException(404, "Komentar tidak ditemukan");
+    }
+
     const deleted = await prisma.komentar.delete({
       where: {
         id: data.id,

@@ -13,4 +13,5 @@ orderRouter.post("/pay" , authMiddleware , controller.createTransaction.bind(con
 orderRouter.post("/success" , authMiddleware , controller.succesTransaction.bind(controller));
 orderRouter.post("/cancel" , authMiddleware , controller.cancelTransaction.bind(controller));
 
+orderRouter.delete("/:orderId" , authMiddleware , controller.deleteOrderById.bind(controller));
 export default orderRouter;

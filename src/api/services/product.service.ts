@@ -37,8 +37,12 @@ export class ProductService {
       },
       skip: (data.page - 1) * data.limit,
       take: data.limit,
-      include: { Store: true, category: true },
+      include: { Store: true, category: true, order: true },
     });
+
+    if (products.length === 0) {
+      throw new HttpException(404, "Product tidak ditemukan");
+    }
     return products;
   }
   public async getAllProductByStoreId(data: productByStoreIdType) {
@@ -54,18 +58,19 @@ export class ProductService {
   }
   public async getTopProduct() {
     const getTopProduct = await prisma.product.findMany({
-      orderBy :{ 
-        order : {
-          _count: "desc"
-        }
-      }, take : 6,
-      include : {
-        order : true,
-        Store : true
-      }
-    })
+      orderBy: {
+        order: {
+          _count: "desc",
+        },
+      },
+      take: 6,
+      include: {
+        order: true,
+        Store: true,
+      },
+    });
 
-    return getTopProduct
+    return getTopProduct;
   }
   public async getProductById(data: productByIdType) {
     if (!data.productId) {
@@ -77,7 +82,7 @@ export class ProductService {
       include: {
         Store: true,
         comment: true,
-        order : true
+        order: true,
       },
     });
 
@@ -98,7 +103,7 @@ export class ProductService {
       where: { storeId: data.storeId, id: data.productId },
       skip: (data.page - 1) * data.limit,
       take: data.limit,
-      include: { Store: true, category: true, order : true },
+      include: { Store: true, category: true, order: true },
     });
 
     return products;

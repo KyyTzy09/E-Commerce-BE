@@ -1,9 +1,14 @@
 export interface categoryByIdType {
   id: string;
 }
+export interface getCategoryByName {
+  name : string
+}
 
-export interface categoryByNameType {
+export interface getProductBycategory {
   name: string;
+  page: number;
+  limit :number;
 }
 
 export interface updateCategoryType {

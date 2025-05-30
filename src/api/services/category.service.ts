@@ -1,9 +1,10 @@
 import { HttpException } from "../../common/error/exception";
 import {
   categoryByIdType,
-  categoryByNameType,
+  getProductBycategory,
   categoryWithProductIdType,
   deleteFromCategoryType,
+  getCategoryByName,
   productToCategoryType,
   updateCategoryType,
 } from "../../common/types/category";
@@ -32,7 +33,7 @@ export class categoryService {
     return getCategoryById;
   }
 
-  async createCategory(data: categoryByNameType) {
+  async createCategory(data: getCategoryByName) {
     const existingCategory = await prisma.category.findFirst({
       where: {
         category_name: data.name,
@@ -116,7 +117,7 @@ export class categoryService {
     return category;
   }
 
-  async getProductByCategory(data: categoryByNameType) {
+  async getProductByCategory(data: getProductBycategory) {
     const getProductByCategory = await prisma.product.findMany({
       where: {
         category: {
@@ -127,6 +128,8 @@ export class categoryService {
           },
         },
       },
+      take: data.limit,
+      skip: (data.page - 1) * data.limit,
     });
 
     if (getProductByCategory.length === 0) {
@@ -169,7 +172,7 @@ export class categoryService {
     });
 
     if (existingCategories.length > 0) {
-    await prisma.categories.deleteMany({
+      await prisma.categories.deleteMany({
         where: { product_id: data.product_Id },
       });
     }

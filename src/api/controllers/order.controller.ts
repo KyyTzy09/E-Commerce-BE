@@ -94,7 +94,7 @@ export class OrderController {
   }
   public async deleteOrderById( req: Request, res: Response, next: NextFunction ) {
     try {
-        const {orderId} = req.body;
+        const {orderId} = req.params;
 
         const deleted = await this.service.deleteOrderById({orderId})
 

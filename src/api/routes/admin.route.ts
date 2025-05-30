@@ -6,7 +6,7 @@ import { categoryController } from "../controllers/category.controller";
 import { categoryService } from "../services/category.service";
 import { OrderController } from "../controllers/order.controller";
 import { OrderService } from "../services/order.service";
-import { CommentController } from "../controllers/command.controller";
+import { CommentController } from "../controllers/comment.controller";
 import { CommentService } from "../services/comment.service";
 
 const adminRouter = express.Router();
