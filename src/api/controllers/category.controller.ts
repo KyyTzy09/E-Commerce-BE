@@ -4,7 +4,7 @@ import { number } from "joi";
 
 export class categoryController {
   constructor(private readonly categoryServices: categoryService) {}
-  async getAllCategory( _req: Request, res: Response, next: NextFunction ) {
+  async getAllCategory(_req: Request, res: Response, next: NextFunction) {
     try {
       const allCategory = await this.categoryServices.getAllCategory();
       res.status(200).json({
@@ -16,10 +16,12 @@ export class categoryController {
       next(error);
     }
   }
-  async getCategoryById( req: Request, res: Response, next: NextFunction ) {
+  async getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
       const { categoryId } = req.params;
-      const category = await this.categoryServices.getCategoryById({id : categoryId});
+      const category = await this.categoryServices.getCategoryById({
+        id: categoryId,
+      });
       res.status(200).json({
         status_code: 200,
         message: `Category dengan id ${categoryId} ditemukan`,
@@ -29,8 +31,8 @@ export class categoryController {
       next(error);
     }
   }
-  
-  async createCategory( req: Request, res: Response, next: NextFunction ) {
+
+  async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
       const createCategory = await this.categoryServices.createCategory({
@@ -47,13 +49,13 @@ export class categoryController {
     }
   }
 
-  async updateCategory( req: Request, res: Response, next: NextFunction ) {
+  async updateCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
       const { categoryId } = req.params;
 
       const updateCategory = await this.categoryServices.updateCategory({
-        id : categoryId,
+        id: categoryId,
         name,
       });
 
@@ -66,12 +68,14 @@ export class categoryController {
       next(error);
     }
   }
-  
-  async deleteCategory( req: Request, res: Response, next: NextFunction ) {
+
+  async deleteCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { categoryId } = req.params;
 
-      const deleteCategory = await this.categoryServices.deleteCategory({id : categoryId});
+      const deleteCategory = await this.categoryServices.deleteCategory({
+        id: categoryId,
+      });
 
       res.status(200).json({
         status_code: 200,
@@ -82,30 +86,31 @@ export class categoryController {
       next(error);
     }
   }
-  async getProductByCategory( req: Request, res: Response, next: NextFunction ) {
+  
+  async getProductByCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, page, limit } = req.query;
-
+      const firstCategory = await this.categoryServices.getFirstCategory();
       const productByCategory =
         await this.categoryServices.getProductByCategory({
-          name: String(name),
-          page : Number(page) || 1,
-          limit : Number(limit) || 10
+          name: name ? String(name) : (firstCategory?.category_name as string),
+          page: Number(page) || 1,
+          limit: Number(limit) || 10,
         });
 
       res.status(200).json({
         status_code: 200,
-        message: `Berhasil mendapatkan Product dengan Category ${name}`,
+        message: `${name ? name : firstCategory?.category_name}`,
         data: productByCategory,
       });
     } catch (error) {
       next(error);
     }
   }
-  async addProductToCategory( req: Request, res: Response, next: NextFunction ) {
+  async addProductToCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { productId, name } = req.body;
-      console.log(name)
+
       const addProduct = await this.categoryServices.addProductToCategory({
         name,
         product_Id: productId,
@@ -121,7 +126,11 @@ export class categoryController {
     }
   }
 
-  async removeProductFromCategory( req: Request, res: Response, next: NextFunction ) {
+  async removeProductFromCategory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const { productId } = req.body;
 

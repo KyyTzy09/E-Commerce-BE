@@ -1,32 +1,24 @@
 import express from "express";
 import { authMiddleware } from "../../common/middlewares/auth.middleware";
-import { RoleGuard } from "../../common/guards/role.guard";
-import storeRouter from "./store.route";
+import { adminMiddleware } from "../../common/middlewares/admin-middleware";
 import { categoryController } from "../controllers/category.controller";
 import { categoryService } from "../services/category.service";
 import { OrderController } from "../controllers/order.controller";
 import { OrderService } from "../services/order.service";
-import { CommentController } from "../controllers/comment.controller";
-import { CommentService } from "../services/comment.service";
 
 const adminRouter = express.Router();
 
-adminRouter.get("/", authMiddleware , RoleGuard, (_req , res ) => {
+adminRouter.get("/", authMiddleware , adminMiddleware, (_req , res ) => {
     res.send("Hello Admin");
-})
+});
 
-const catController = new categoryController(new categoryService)
-const orderController = new OrderController(new OrderService)
-const commentController = new CommentController(new CommentService)
+const catController = new categoryController(new categoryService);
+const orderController = new OrderController(new OrderService);
 
-adminRouter.use("/store" , authMiddleware , RoleGuard , storeRouter);
+adminRouter.post("/category", authMiddleware , adminMiddleware, catController.createCategory.bind(catController));
 
-adminRouter.get("/comment" , authMiddleware, RoleGuard, commentController.getAllComment.bind(commentController))
+adminRouter.delete("/category/:categoryId" , authMiddleware, adminMiddleware, catController.deleteCategory.bind(catController));
 
-adminRouter.post("/category", authMiddleware , RoleGuard, catController.createCategory.bind(catController))
-
-adminRouter.delete("/category" , authMiddleware, RoleGuard, catController.deleteCategory.bind(catController))
-
-adminRouter.get("/order" , authMiddleware , RoleGuard, orderController.getAllOrders.bind(orderController))
+adminRouter.get("/order" , authMiddleware , adminMiddleware, orderController.getAllOrders.bind(orderController));
 
 export default adminRouter;

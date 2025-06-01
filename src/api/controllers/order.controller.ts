@@ -100,7 +100,7 @@ export class OrderController {
 
         res.status(200).json({
         status_code: 200,
-        message: `Transaksi sukses dihapus`,
+        message: `Order sukses dihapus`,
         data: deleted
       })
     } catch (error) {

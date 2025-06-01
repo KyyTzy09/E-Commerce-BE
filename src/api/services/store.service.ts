@@ -55,7 +55,11 @@ export class StoreService {
       },
       include: {
         product: true,
-        user: true,
+        user: {
+          include: {
+            profile: true,
+          },
+        },
       },
     });
 
@@ -99,7 +103,7 @@ export class StoreService {
 
     const store = await prisma.store.findUnique({
       where: {
-        id : data.id
+        id: data.id,
       },
     });
 
@@ -172,7 +176,9 @@ export class StoreService {
       throw new HttpException(404, "No stores found");
     }
 
-    const deleteProduct = await productService.deleteProductByStoreId({storeId : data.id})
+    const deleteProduct = await productService.deleteProductByStoreId({
+      storeId: data.id,
+    });
 
     const deletedStore = await prisma.store.deleteMany({
       where: {
@@ -180,6 +186,6 @@ export class StoreService {
       },
     });
 
-    return {deletedStore , deleteProduct};
+    return { deletedStore, deleteProduct };
   }
 }

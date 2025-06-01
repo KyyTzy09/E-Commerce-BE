@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../error/exception";
 
-export const RoleGuard = async (req : Request , res : Response , next : NextFunction) => {
+export const adminMiddleware = async (req : Request , res : Response , next : NextFunction) => {
     try {
         const user = (req as any).user;
         if (user.role !== "ADMIN") {

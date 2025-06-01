@@ -19,6 +19,11 @@ export class categoryService {
 
     return getAllCategory;
   }
+  async getFirstCategory(){
+    const category = await prisma.category.findFirst()
+    return category;
+  }
+
   async getCategoryById(data: categoryByIdType) {
     const getCategoryById = await prisma.category.findUnique({
       where: {
@@ -82,16 +87,25 @@ export class categoryService {
       },
     });
 
+    
     if (!checkCategory) {
       throw new HttpException(404, "Category tidak ditemukan");
     }
+
+    const deleteCategories = await prisma.categories.deleteMany({
+      where : {
+        category_Id : data.id
+      }
+    })
 
     const deleteCategory = await prisma.category.delete({
       where: {
         id: data.id,
       },
     });
-    return deleteCategory;
+
+    
+    return { deleteCategories , deleteCategory}
   }
 
   async getCategoryByProductId(data: categoryWithProductIdType) {
