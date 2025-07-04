@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node dist/app.js",
-    "build":"tsc",
+    "build":"prisma generate && tsc",
     "dev": "nodemon --watch src --ext ts --exec bun ./src/app.ts"
   },
   "devDependencies": {
