@@ -8,6 +8,7 @@ import {
   productToCategoryType,
   updateCategoryType,
 } from "@/common/types/category.js";
+import { Categories, Category } from "@prisma/client";
 
 export class categoryService {
   async getAllCategory() {
@@ -19,7 +20,7 @@ export class categoryService {
 
     return getAllCategory;
   }
-  async getFirstCategory(){
+  async getFirstCategory() {
     const category = await prisma.category.findFirst()
     return category;
   }
@@ -87,14 +88,14 @@ export class categoryService {
       },
     });
 
-    
+
     if (!checkCategory) {
       throw new HttpException(404, "Category tidak ditemukan");
     }
 
     const deleteCategories = await prisma.categories.deleteMany({
-      where : {
-        category_Id : data.id
+      where: {
+        category_Id: data.id
       }
     })
 
@@ -104,8 +105,8 @@ export class categoryService {
       },
     });
 
-    
-    return { deleteCategories , deleteCategory}
+
+    return { deleteCategories, deleteCategory }
   }
 
   async getCategoryByProductId(data: categoryWithProductIdType) {
@@ -118,7 +119,7 @@ export class categoryService {
       },
     });
 
-    const category_Id = product?.category.map((item) => item.category_Id);
+    const category_Id = product?.category.map((item: Categories) => item.category_Id);
 
     const category = await prisma.category.findMany({
       where: {
@@ -191,7 +192,7 @@ export class categoryService {
       });
     }
     const addToCategory = await prisma.categories.createMany({
-      data: checkCategory.map((cat) => ({
+      data: checkCategory.map((cat: Category) => ({
         category_Id: cat.id,
         product_id: data.product_Id,
       })),

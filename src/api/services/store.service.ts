@@ -9,6 +9,7 @@ import {
   updateStoreType,
 } from "@/common/types/store.js";
 import { ProductService } from "./product.service.js";
+import { Store } from "@prisma/client";
 
 export class StoreService {
   public async getAllStores(data: allStoresType) {
@@ -145,7 +146,7 @@ export class StoreService {
     const deletedProducts = await prisma.product.deleteMany({
       where: {
         storeId: {
-          in: existingStores.map((store) => store.id),
+          in: existingStores.map((store: Store) => store.id),
         },
       },
     });

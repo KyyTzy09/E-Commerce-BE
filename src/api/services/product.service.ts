@@ -11,6 +11,7 @@ import {
   updateStok,
 } from "@/common/types/product.js";
 import { categoryService } from "./category.service.js";
+import { Product } from "@prisma/client";
 
 export class ProductService {
   public async getAllProduct(data: getAllProductType) {
@@ -160,7 +161,7 @@ export class ProductService {
     const deleteCategory = await prisma.categories.deleteMany({
       where: {
         product_id: {
-          in: existingProduct.map((item) => item.id),
+          in: existingProduct.map((item: Product) => item.id),
         },
       },
     });
@@ -168,7 +169,7 @@ export class ProductService {
     const deletekomentar = await prisma.komentar.deleteMany({
       where: {
         product_id: {
-          in: existingProduct.map((item) => item.id),
+          in: existingProduct.map((item : Product) => item.id),
         },
       },
     });
@@ -176,7 +177,7 @@ export class ProductService {
     const deleteOrder = await prisma.order.deleteMany({
       where: {
         product_id: {
-          in: existingProduct.map((item) => item.id),
+          in: existingProduct.map((item : Product) => item.id),
         },
       },
     });
