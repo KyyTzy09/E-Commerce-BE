@@ -10,6 +10,7 @@ import {
 } from "../../common/types/store.js";
 import { ProductService } from "./product.service.js";
 import { Store } from "@prisma/client";
+import prisma from "../../common/utils/prisma.js";
 
 export class StoreService {
   public async getAllStores(data: allStoresType) {

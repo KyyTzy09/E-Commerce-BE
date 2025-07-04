@@ -11,6 +11,7 @@ import {
 } from "../../common/types/order.js";
 import { ProductService } from "./product.service.js";
 import { UserService } from "./user.service.js";
+import prisma from "../../common/utils/prisma.js";
 
 const productService = new ProductService();
 const userService = new UserService();

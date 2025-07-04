@@ -6,6 +6,7 @@ import {
   getKomentarByProductIdTypes,
   getKomentarByUserIdTypes,
 } from "../../common/types/komentar.js";
+import prisma from "../../common/utils/prisma.js";
 
 export class CommentService {
   public async getAllComment() {

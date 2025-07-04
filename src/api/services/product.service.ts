@@ -12,6 +12,7 @@ import {
 } from "../../common/types/product.js";
 import { categoryService } from "./category.service.js";
 import { Product } from "@prisma/client";
+import prisma from "../../common/utils/prisma.js";
 
 export class ProductService {
   public async getAllProduct(data: getAllProductType) {

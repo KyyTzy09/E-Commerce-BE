@@ -12,6 +12,6 @@ export async function errorMiddleware(
       .status(err.status)
       .json({ status_code: err.status, message: err.message });
   } else {
-    res.status(500).json({ sattus_code : 500, message: err.message });
+    res.status(500).json({ status_code : 500, message: err.message });
   }
 }

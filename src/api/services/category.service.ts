@@ -9,6 +9,7 @@ import {
   updateCategoryType,
 } from "../../common/types/category.js";
 import { Categories, Category } from "@prisma/client";
+import prisma from "../../common/utils/prisma.js";
 
 export class categoryService {
   async getAllCategory() {

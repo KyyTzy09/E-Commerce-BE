@@ -1,5 +1,6 @@
 import { HttpException } from "../../common/error/exception.js";
 import { updateProfileType, userByIdType } from "../../common/types/user.js";
+import prisma from "../../common/utils/prisma.js";
 
 export class UserService {
   public async getAllUsers() {
