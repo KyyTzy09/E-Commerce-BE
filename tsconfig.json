@@ -7,14 +7,14 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@/*" : ["src/*"]
+      "@/*": ["src/*"]
     },
     "noEmit": false,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types", "src/common/types"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

@@ -1,4 +1,4 @@
-import midtransClient from "midtrans-client"
+import { midtransClient } from "midtrans-client"
 
 const Snap = new midtransClient.Snap({
     isProduction: process.env.NODE_ENV === "production" ? true : false,
