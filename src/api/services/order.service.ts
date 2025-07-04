@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
-import Snap from "@/common/configs/midtrans.js";
-import { HttpException } from "@/common/error/exception.js";
+import Snap from "../../common/configs/midtrans.js";
+import { HttpException } from "../../common/error/exception.js";
 import {
   createOrderTypes,
   createTransasctionTypes,
@@ -8,7 +8,7 @@ import {
   orderByUserIdTypes,
   successTransaction,
   updateOrderTypes,
-} from "@/common/types/order.js";
+} from "../../common/types/order.js";
 import { ProductService } from "./product.service.js";
 import { UserService } from "./user.service.js";
 

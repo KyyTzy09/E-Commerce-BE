@@ -1,8 +1,8 @@
 import express from "express";
-import { ValidateMiddleware } from "@/common/middlewares/validate.middleware.js";
+import { ValidateMiddleware } from "../../common/middlewares/validate.middleware.js";
 import { StoreController } from "../controllers/store.controller.js";
 import { storeSchema } from "../validators/store.validator.js";
-import { authMiddleware } from "@/common/middlewares/auth.middleware.js";
+import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 
 const storeRouter = express.Router();
 const storeController = new StoreController();

@@ -1,8 +1,8 @@
-import { HttpException } from "@/common/error/exception.js";
+import { HttpException } from "../../common/error/exception.js";
 import * as bcrypt from "bcryptjs";
-import prisma from "@/common/utils/prisma.js";
+import prisma from "../../common/utils/prisma.js";
 import * as Jwt from "jsonwebtoken";
-import { authType, tokenType } from "@/common/types/auth.js";
+import { authType, tokenType } from "../../common/types/auth.js";
 
 export class AuthService {
   public async signUp(data: authType) {

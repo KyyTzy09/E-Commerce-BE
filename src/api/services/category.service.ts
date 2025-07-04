@@ -1,4 +1,4 @@
-import { HttpException } from "@/common/error/exception.js";
+import { HttpException } from "../../common/error/exception.js";
 import {
   categoryByIdType,
   getProductBycategory,
@@ -7,7 +7,7 @@ import {
   getCategoryByName,
   productToCategoryType,
   updateCategoryType,
-} from "@/common/types/category.js";
+} from "../../common/types/category.js";
 import { Categories, Category } from "@prisma/client";
 
 export class categoryService {

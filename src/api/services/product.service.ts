@@ -1,4 +1,4 @@
-import { HttpException } from "@/common/error/exception.js";
+import { HttpException } from "../../common/error/exception.js";
 import {
   createProductType,
   deleteProductByIdType,
@@ -9,7 +9,7 @@ import {
   productByStoreIdType,
   updateProductType,
   updateStok,
-} from "@/common/types/product.js";
+} from "../../common/types/product.js";
 import { categoryService } from "./category.service.js";
 import { Product } from "@prisma/client";
 

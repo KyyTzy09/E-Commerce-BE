@@ -1,4 +1,4 @@
-import { HttpException } from "@/common/error/exception.js";
+import { HttpException } from "../../common/error/exception.js";
 import {
   allStoresType,
   createStoreType,
@@ -7,7 +7,7 @@ import {
   storeByIdType,
   storeByUserIdType,
   updateStoreType,
-} from "@/common/types/store.js";
+} from "../../common/types/store.js";
 import { ProductService } from "./product.service.js";
 import { Store } from "@prisma/client";
 

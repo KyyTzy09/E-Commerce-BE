@@ -3,7 +3,7 @@ import { UserController } from "../controllers/user.controller.js";
 import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 import { upload } from "../../common/middlewares/multer.middleware.js";
 import { userSChema } from "../validators/user.validator.js";
-import { ValidateMiddleware } from "@/common/middlewares/validate.middleware.js";
+import { ValidateMiddleware } from "../../common/middlewares/validate.middleware.js";
 
 const userRouter = express.Router();
 const userController = new UserController();

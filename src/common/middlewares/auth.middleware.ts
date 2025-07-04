@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../error/exception.js";
 import * as Jwt from "jsonwebtoken";
-import { UserService } from "@/api/services/user.service.js";
+import { UserService } from "../../api/services/user.service.js";
 
 export async function authMiddleware( req: Request, _res: Response, next: NextFunction ) {
   try {

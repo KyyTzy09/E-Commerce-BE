@@ -1,6 +1,6 @@
 import express from "express";
 import { CommentController } from "../controllers/comment.controller.js";
-import { authMiddleware } from "@/common/middlewares/auth.middleware.js";
+import { authMiddleware } from "../../common/middlewares/auth.middleware.js";
 
 const commentRouter = express.Router()
 const commentController = new CommentController()
