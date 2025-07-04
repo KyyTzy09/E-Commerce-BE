@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { HttpException } from "../error/exception";
+import { HttpException } from "../error/exception.js";
 
 export function ValidateMiddleware(schema : Joi.ObjectSchema) {
     return async (req : Request, _res : Response, next : NextFunction) => {

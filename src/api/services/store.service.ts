@@ -1,4 +1,4 @@
-import { HttpException } from "../../common/error/exception";
+import { HttpException } from "@/common/error/exception.js";
 import {
   allStoresType,
   createStoreType,
@@ -7,8 +7,8 @@ import {
   storeByIdType,
   storeByUserIdType,
   updateStoreType,
-} from "../../common/types/store";
-import { ProductService } from "./product.service";
+} from "@/common/types/store.js";
+import { ProductService } from "./product.service.js";
 
 export class StoreService {
   public async getAllStores(data: allStoresType) {

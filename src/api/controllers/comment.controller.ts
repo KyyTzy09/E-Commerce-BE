@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { CommentService } from "../services/comment.service";
+import { CommentService } from "../services/comment.service.js";
 
+const commentService = new CommentService()
 export class CommentController {
-  constructor(private readonly commandService: CommentService) {}
   public async getAllComment(_req: Request, res: Response, next: NextFunction) {
     try {
-      const Comments = await this.commandService.getAllComment();
+      const Comments = await commentService.getAllComment();
       res.status(200).json({
         status_code: 200,
         message: `Berhasil mendapatkan semua data komentar`,
@@ -23,7 +23,7 @@ export class CommentController {
   ) {
     try {
       const { productId } = req.query;
-      const Comments = await this.commandService.getAllCommentByProductId({
+      const Comments = await commentService.getAllCommentByProductId({
         productId: String(productId),
       });
 
@@ -44,7 +44,7 @@ export class CommentController {
   ) {
     try {
       const user = await (req as any).user;
-      const Comments = await this.commandService.getAllCommentByUserId({
+      const Comments = await commentService.getAllCommentByUserId({
         userId: user?.id,
       });
       res.status(200).json({
@@ -60,7 +60,7 @@ export class CommentController {
     try {
       const { productId, komentar } = req.body;
       const user = (req as any).user;
-      const created = await this.commandService.createComment({
+      const created = await commentService.createComment({
         userId: user?.id,
         productId,
         komentar,
@@ -78,7 +78,7 @@ export class CommentController {
   public async deleteCommentById(req: Request, res: Response, next: NextFunction) {
     try {
       const { commentId } = req.params;
-      const deleted = await this.commandService.deleteCommentById({
+      const deleted = await commentService.deleteCommentById({
         id: commentId,
       });
 

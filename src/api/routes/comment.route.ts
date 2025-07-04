@@ -1,17 +1,16 @@
 import express from "express";
-import { CommentController } from "../controllers/comment.controller";
-import { CommentService } from "../services/comment.service";
-import { authMiddleware } from "../../common/middlewares/auth.middleware";
+import { CommentController } from "../controllers/comment.controller.js";
+import { authMiddleware } from "@/common/middlewares/auth.middleware.js";
 
 const commentRouter = express.Router()
-const commentController = new CommentController(new CommentService)
+const commentController = new CommentController()
 
 
-commentRouter.get("/" ,authMiddleware, commentController.getAllComment.bind(commentController))
-commentRouter.post("/" ,authMiddleware, commentController.createComment.bind(commentController))
-commentRouter.get("/product" , commentController.getCommandByProductId.bind(commentController))
+commentRouter.get("/" ,authMiddleware, commentController.getAllComment)
+commentRouter.post("/" ,authMiddleware, commentController.createComment)
+commentRouter.get("/product" , commentController.getCommandByProductId)
 
-commentRouter.get("/user" , authMiddleware, commentController.getCommentByUserId.bind(commentController))
-commentRouter.delete("/:commentId" , authMiddleware, commentController.deleteCommentById.bind(commentController))
+commentRouter.get("/user" , authMiddleware, commentController.getCommentByUserId)
+commentRouter.delete("/:commentId" , authMiddleware, commentController.deleteCommentById)
 
 export default commentRouter

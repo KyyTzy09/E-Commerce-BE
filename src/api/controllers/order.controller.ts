@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { OrderService } from "../services/order.service";
+import { OrderService } from "../services/order.service.js";
 
+
+const orderService = new OrderService()
 export class OrderController {
-  constructor(private readonly service: OrderService) {}
-
   public async getAllOrders(_req: Request, res: Response, next: NextFunction) {
     try {
-      const orders = await this.service.getAllOrders();
+      const orders = await orderService.getAllOrders();
       res.status(200).json({
         status_code: 200,
         message: `Berhasil mendapatkan semua data order`,
@@ -21,7 +21,7 @@ export class OrderController {
     try {
       const user = (req as any).user;
 
-      const orders = await this.service.getAllOrdersByUserId({
+      const orders = await orderService.getAllOrdersByUserId({
         userId: user.id,
       });
 
@@ -40,7 +40,7 @@ export class OrderController {
       const { productId, price, quantity } = req.body;
       const user = await (req as any).user;
 
-      const createOrder = await this.service.createOrder({ productId, userId: user.id, price, quantity });
+      const createOrder = await orderService.createOrder({ productId, userId: user.id, price, quantity });
       res.status(200).json({
         status_code: 201,
         message: `Order sukses dibuat`,
@@ -54,7 +54,7 @@ export class OrderController {
     try {
       const { productId, orderId } = req.body;
       const user = await (req as any).user;
-      const transaction = await this.service.createTransaction({ productId, userId: user.id, orderId });
+      const transaction = await orderService.createTransaction({ productId, userId: user.id, orderId });
       res.status(200).json({
         status_code: 201,
         message: `Transaksi sukses dibuat`,
@@ -68,7 +68,7 @@ export class OrderController {
     try {
       const { productId, orderId } = req.body;
       const user = await (req as any).user;
-      const createOrder = await this.service.successTransaction({ productId, userId: user.id, orderId });
+      const createOrder = await orderService.successTransaction({ productId, userId: user.id, orderId });
       res.status(200).json({
         status_code: 200,
         message: `Transaksi berhasil`,
@@ -82,7 +82,7 @@ export class OrderController {
     try {
       const { productId, orderId } = req.body;
       const user = await (req as any).user;
-      const createOrder = await this.service.cancelTransaction({ productId, userId: user.id, orderId });
+      const createOrder = await orderService.cancelTransaction({ productId, userId: user.id, orderId });
       res.status(200).json({
         status_code: 200,
         message: `Transaksi Dibatalkan`,
@@ -96,7 +96,7 @@ export class OrderController {
     try {
         const {orderId} = req.params;
 
-        const deleted = await this.service.deleteOrderById({orderId})
+        const deleted = await orderService.deleteOrderById({orderId})
 
         res.status(200).json({
         status_code: 200,

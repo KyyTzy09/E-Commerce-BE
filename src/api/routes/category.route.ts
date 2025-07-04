@@ -1,20 +1,19 @@
 import express from "express";
-import { categoryController } from "../controllers/category.controller";
-import { categoryService } from "../services/category.service";
+import { categoryController } from "../controllers/category.controller.js";
 
 const categoryRouter = express.Router();
-const controller = new categoryController(new categoryService);
+const controller = new categoryController();
 
-categoryRouter.get("/" , controller.getAllCategory.bind(controller)); 
-categoryRouter.post("/" , controller.createCategory.bind(controller));
+categoryRouter.get("/" , controller.getAllCategory); 
+categoryRouter.post("/" , controller.createCategory);
 
-categoryRouter.get("/product" , controller.getProductByCategory.bind(controller));
-categoryRouter.post("/add" , controller.addProductToCategory.bind(controller));
-categoryRouter.delete("/remove" , controller.removeProductFromCategory.bind(controller));
+categoryRouter.get("/product" , controller.getProductByCategory);
+categoryRouter.post("/add" , controller.addProductToCategory);
+categoryRouter.delete("/remove" , controller.removeProductFromCategory);
 
-categoryRouter.get("/:categoryId" , controller.getCategoryById.bind(controller));
-categoryRouter.patch("/:categoryId" , controller.updateCategory.bind(controller));
-categoryRouter.delete("/:categoryId" , controller.deleteCategory.bind(controller));
+categoryRouter.get("/:categoryId" , controller.getCategoryById);
+categoryRouter.patch("/:categoryId" , controller.updateCategory);
+categoryRouter.delete("/:categoryId" , controller.deleteCategory);
 
 
 export default categoryRouter;

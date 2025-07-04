@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpException } from "../error/exception";
+import { HttpException } from "../error/exception.js";
 
 export const adminMiddleware = async (req : Request , res : Response , next : NextFunction) => {
     try {

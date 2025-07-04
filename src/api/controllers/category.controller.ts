@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
-import { categoryService } from "../services/category.service";
-import { number } from "joi";
+import { categoryService } from "../services/category.service.js";
 
+
+const categoryServices = new categoryService()
 export class categoryController {
-  constructor(private readonly categoryServices: categoryService) {}
   async getAllCategory(_req: Request, res: Response, next: NextFunction) {
     try {
-      const allCategory = await this.categoryServices.getAllCategory();
+      const allCategory = await categoryServices.getAllCategory();
       res.status(200).json({
         status_code: 200,
         message: "Berhasil mendapatkan semua Category",
@@ -19,7 +19,7 @@ export class categoryController {
   async getCategoryById(req: Request, res: Response, next: NextFunction) {
     try {
       const { categoryId } = req.params;
-      const category = await this.categoryServices.getCategoryById({
+      const category = await categoryServices.getCategoryById({
         id: categoryId,
       });
       res.status(200).json({
@@ -35,7 +35,7 @@ export class categoryController {
   async createCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
-      const createCategory = await this.categoryServices.createCategory({
+      const createCategory = await categoryServices.createCategory({
         name,
       });
 
@@ -54,7 +54,7 @@ export class categoryController {
       const { name } = req.body;
       const { categoryId } = req.params;
 
-      const updateCategory = await this.categoryServices.updateCategory({
+      const updateCategory = await categoryServices.updateCategory({
         id: categoryId,
         name,
       });
@@ -73,7 +73,7 @@ export class categoryController {
     try {
       const { categoryId } = req.params;
 
-      const deleteCategory = await this.categoryServices.deleteCategory({
+      const deleteCategory = await categoryServices.deleteCategory({
         id: categoryId,
       });
 
@@ -90,9 +90,9 @@ export class categoryController {
   async getProductByCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, page, limit } = req.query;
-      const firstCategory = await this.categoryServices.getFirstCategory();
+      const firstCategory = await categoryServices.getFirstCategory();
       const productByCategory =
-        await this.categoryServices.getProductByCategory({
+        await categoryServices.getProductByCategory({
           name: name ? String(name) : (firstCategory?.category_name as string),
           page: Number(page) || 1,
           limit: Number(limit) || 10,
@@ -111,7 +111,7 @@ export class categoryController {
     try {
       const { productId, name } = req.body;
 
-      const addProduct = await this.categoryServices.addProductToCategory({
+      const addProduct = await categoryServices.addProductToCategory({
         name,
         product_Id: productId,
       });
@@ -135,7 +135,7 @@ export class categoryController {
       const { productId } = req.body;
 
       const removeProduct =
-        await this.categoryServices.removeProductFromCategory({
+        await categoryServices.removeProductFromCategory({
           product_Id: productId,
         });
 

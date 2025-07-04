@@ -1,11 +1,11 @@
-import { HttpException } from "../../common/error/exception";
+import { HttpException } from "@/common/error/exception.js";
 import {
   createKomentarTypes,
   deleteByIdTypes,
   getKomentarByIdTypes,
   getKomentarByProductIdTypes,
   getKomentarByUserIdTypes,
-} from "../../common/types/komentar";
+} from "@/common/types/komentar.js";
 
 export class CommentService {
   public async getAllComment() {

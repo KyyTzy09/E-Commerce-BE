@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpException } from "../error/exception";
-import Jwt, { JsonWebTokenError } from "jsonwebtoken";
-import { UserService } from "../../api/services/user.service";
+import { HttpException } from "../error/exception.js";
+import * as Jwt from "jsonwebtoken";
+import { UserService } from "@/api/services/user.service.js";
 
 export async function authMiddleware( req: Request, _res: Response, next: NextFunction ) {
   try {
@@ -28,7 +28,7 @@ export async function authMiddleware( req: Request, _res: Response, next: NextFu
 
     next();
   } catch (error) {
-    if (error instanceof JsonWebTokenError) {
+    if (error instanceof Jwt.JsonWebTokenError) {
       throw new HttpException(401, "Unauthorized");
     }
     next(error)

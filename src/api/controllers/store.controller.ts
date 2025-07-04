@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { StoreService } from "../services/store.service";
+import { StoreService } from "../services/store.service.js";
 
+const storeService = new StoreService()
 export class StoreController {
-  constructor (private readonly storeService : StoreService){}
   public async getAllStores(req: Request, res: Response, next: NextFunction) {
     try {
       const { page, limit } = req.query;
 
-      const allStores = await this.storeService.getAllStores({
+      const allStores = await storeService.getAllStores({
         page: Number(page) | 1,
         limit: Number(limit) | 10,
       });
@@ -30,7 +30,7 @@ export class StoreController {
       const { page, limit } = req.query;
       const user = (req as any).user;
 
-      const allStores = await this.storeService.getAllStoresByUserId({
+      const allStores = await storeService.getAllStoresByUserId({
         userId: user.id,
         page: Number(page) | 1,
         limit: Number(limit) | 10,
@@ -53,7 +53,7 @@ export class StoreController {
   public async getStoresById(req: Request, res: Response, next: NextFunction) {
     try {
       const { storeId } = req.params;
-      const store = await this.storeService.getStoreById({ id : storeId });
+      const store = await storeService.getStoreById({ id : storeId });
       res.status(200).json({
         status_code: 200,
         message: "Berhasil mendapatkan store",
@@ -67,7 +67,7 @@ export class StoreController {
     try {
       const { name, info } = req.body;
       const user = await (req as any).user;
-      const createdStore = await this.storeService.createStore({
+      const createdStore = await storeService.createStore({
         userId: user.id,
         name,
         info,
@@ -88,7 +88,7 @@ export class StoreController {
       const { name, info } = req.body;
       const user = await (req as any).user;
 
-      const updatedStore = await this.storeService.updateStore({
+      const updatedStore = await storeService.updateStore({
         id : storeId,
         userId: user.id,
         name,
@@ -107,7 +107,7 @@ export class StoreController {
     try {
       const user = await (req as any).user;
 
-      const deletedStores = await this.storeService.deleteAllStore({ userId: user.id });
+      const deletedStores = await storeService.deleteAllStore({ userId: user.id });
 
       res.status(200).json({
         status_code: 200,
@@ -123,7 +123,7 @@ export class StoreController {
       const { storeId } = req.params;
       const user = await (req as any).user;
 
-      const deletedStore = await this.storeService.deleteStoreById({ userId: user?.id, id : storeId });
+      const deletedStore = await storeService.deleteStoreById({ userId: user?.id, id : storeId });
 
       res.status(200).json({
         status_code: 200,

@@ -1,22 +1,21 @@
 import express from "express";
-import { ValidateMiddleware } from "../../common/middlewares/validate.middleware";
-import { StoreController } from "../controllers/store.controller";
-import { storeSchema } from "../validators/store.validator";
-import { StoreService } from "../services/store.service";
-import { authMiddleware } from "../../common/middlewares/auth.middleware";
+import { ValidateMiddleware } from "@/common/middlewares/validate.middleware.js";
+import { StoreController } from "../controllers/store.controller.js";
+import { storeSchema } from "../validators/store.validator.js";
+import { authMiddleware } from "@/common/middlewares/auth.middleware.js";
 
 const storeRouter = express.Router();
-const storeController = new StoreController(new StoreService);
+const storeController = new StoreController();
 
 // stores
-storeRouter.post("/" ,authMiddleware, ValidateMiddleware(storeSchema) , storeController.createStore.bind(storeController));
-storeRouter.delete("/" , storeController.deleteStore.bind(storeController));
+storeRouter.post("/" ,authMiddleware, ValidateMiddleware(storeSchema) , storeController.createStore);
+storeRouter.delete("/" , storeController.deleteStore);
 
-storeRouter.get("/user" ,authMiddleware , storeController.getAllStoresByUserId.bind(storeController));
+storeRouter.get("/user" ,authMiddleware , storeController.getAllStoresByUserId);
 
 // by Id
-storeRouter.patch("/:storeId" ,authMiddleware, ValidateMiddleware(storeSchema), storeController.updateStore.bind(storeController));
-storeRouter.get("/:storeId" , storeController.getStoresById.bind(storeController));
-storeRouter.delete("/:storeId" , storeController.deleteStoreById.bind(storeController));
+storeRouter.patch("/:storeId" ,authMiddleware, ValidateMiddleware(storeSchema), storeController.updateStore);
+storeRouter.get("/:storeId" , storeController.getStoresById);
+storeRouter.delete("/:storeId" , storeController.deleteStoreById);
 
 export default storeRouter;

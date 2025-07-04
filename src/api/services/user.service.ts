@@ -1,5 +1,5 @@
-import { HttpException } from "../../common/error/exception";
-import { updateProfileType, userByIdType } from "../../common/types/user";
+import { HttpException } from "@/common/error/exception.js";
+import { updateProfileType, userByIdType } from "@/common/types/user.js";
 
 export class UserService {
   public async getAllUsers() {
