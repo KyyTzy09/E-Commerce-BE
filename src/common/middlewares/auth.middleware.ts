@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../error/exception.js";
 import * as Jwt from "jsonwebtoken";
-import { JsonWebTokenError } from "jsonwebtoken";
 import { UserService } from "../../api/services/user.service.js";
 
 export async function authMiddleware(req: Request, _res: Response, next: NextFunction) {
+  const { JsonWebTokenError } = Jwt;
   try {
     const token = await req.cookies["token"];
     const service = new UserService();
